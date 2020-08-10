@@ -93,7 +93,7 @@ public:
                 cur->left = nullptr;
                 cur->right = next;
             }
-            cur = cur->rightl
+            cur = cur->right;
         }
     }
 };
