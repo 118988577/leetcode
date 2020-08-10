@@ -41,36 +41,48 @@
 
 // @lc code=start
 #include<vector>
-#include<stdlib.h>
+#include <algorithm>
 using namespace std;
 
 class Solution {
 public:
-int minValue = INT_MAX;
-    void dfs(vector<vector<int>>& triangle,int i,int j,int sum){
-        if(i >= triangle.size()){
-            if(sum < minValue){
-                minValue = sum;
-            }
-            return;
-        }
+// int minValue = INT_MAX;
+    // void dfs(vector<vector<int>>& triangle,int i,int j,int sum){
+    //     if(i >= triangle.size()){
+    //         if(sum < minValue){
+    //             minValue = sum;
+    //         }
+    //         return;
+    //     }
 
-        dfs(triangle,i+1,j,sum+triangle[i][j]);
-        if(j +1 < triangle[i+1].size())
-            dfs(triangle,i+1,j+1,sum+triangle[i][j]);
-    } 
+    //     dfs(triangle,i+1,j,sum+triangle[i][j]);
+    //     if(j +1 < triangle[i+1].size())
+    //         dfs(triangle,i+1,j+1,sum+triangle[i][j]);
+    // } 
     int minimumTotal(vector<vector<int>>& triangle) {
-        if(triangle.empty())
+        // if(triangle.empty())
+        //     return 0;
+        // dfs(triangle,0,0,0);
+        int H = triangle.size();
+        int L = triangle[H - 1].size();
+        vector<vector<int>> dp(H, vector<int>(H));
+        if(H == 0)
             return 0;
-        dfs(triangle,0,0,0);
-        return minValue;
+        dp[0][0] = triangle[0][0];
+        for (int i = 1; i < H;i++){
+            dp[i][0] = dp[i - 1][0] + triangle[i][0];
+            for (int j = 1; j < triangle[i].size() - 1;j++)
+                dp[i][j] = min(dp[i - 1][j - 1], dp[i - 1][j]) + triangle[i][j];
+            dp[i][j] = dp[i - 1][j - 1] + triangle[i][j];
+        }
+            return *min_element(dp[H-1].begin(),dp[H-1].end());
     }
 };
-int main(){
-    Solution test;
-    vector<vector<int>> example ={{2},{3,4},{6,5,7},{4,1,8,3}};
-    test.minimumTotal(example);
-    return 0;
-}
+// int main(){
+//     Solution test;
+//     vector<vector<int>> example ={{2},{3,4},{6,5,7},{4,1,8,3}};
+//     test.minimumTotal(example);
+//     return 0;
+// }
 // @lc code=end
 
