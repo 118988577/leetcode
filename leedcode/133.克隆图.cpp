@@ -115,17 +115,17 @@ public:
 using namespace std;
 class Solution {
 public:
+    map<Node *, Node *> visited;
     Node* cloneGraph(Node* node) {
         if(node == nullptr)
             return nullptr;
-        map<Node *, Node *> visited;
         if(visited.find(node) != visited.end())
-            return visited[node];
-        Node *cloneNode = new Node(node->val,{});
+            return visited[node];; 
+        Node *cloneNode = new Node(node->val);
         visited[node] = cloneNode;
         vector<Node *> curNodeneighbors = node->neighbors;
         for (vector<Node *>::iterator it = curNodeneighbors.begin(); it != curNodeneighbors.end();it++){
-
+            (cloneNode->neighbors).push_back(cloneGraph(*it));
         }
         return cloneNode;
     }
