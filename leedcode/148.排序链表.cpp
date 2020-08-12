@@ -40,52 +40,39 @@
 class Solution {
 public:
     //采用归并排序
-    listNode* mergerSort(ListNode* head){
-        if(head->next == nullptr)
-            return head;
-        //对链表进行切割,切割点为slow
-        ListNode *fast = head->next;
-        ListNode *slow = head;
-        while(fast!=nullptr&& fast->next!= nullptr){
-            fast = fast->next->next;
-            slow = slow->next;
-        }
-         ListNode *secondList = slow->next;
-         slow->next = nullptr;
-         mergerSort(head);
-         mergerSort(secondList);
+    ListNode* mergerSort(ListNode* first,ListNode* second){
+
          //对两个已有序的链表进行合并
          ListNode *frontNode = new ListNode(-1);
-         ListNode *first = head;
-         listNode *second = secondList;
          ListNode *curNode = frontNode;
          while(first != nullptr&&second != nullptr){
              if(first->val < second->val){
                  curNode->next = first;
-
                  first = first->next;
-             }else if(first->val > second->val){
-                curNode->next = second;
-                second = second->next;
              }else{
-                curNode->next = first;
-                curNode->next->next = second;
-                first = first->next;
+                curNode->next = second;
                 second = second->next;
              }
             curNode = curNode->next;
          }
-         if(first == nullptr){
-             curNode->next = second;
-         }else{
-             curNode->next = first;
-         }
+        curNode->next = first == nullptr? second:first;
          return frontNode->next;
     }
+
     ListNode* sortList(ListNode* head) {
-        if(head == nullptr)
+        if(head == nullptr || head->next == nullptr)
             return head;
-        return mergerSort(head);
+        //对链表进行切割,切割点为slow
+        ListNode *fast = head->next;
+        ListNode *slow = head;
+        ListNode* pmid;
+        while(fast!=nullptr&& fast->next!= nullptr){
+            fast = fast->next->next;
+            slow = slow->next;
+        }
+        pmid = slow->next;
+        slow->next = nullptr;
+        return mergerSort(sortList(head), sortList(pmid));
     }
 };
 // @lc code=end
