@@ -50,17 +50,17 @@ public:
         dp1[0] = 0;
         dp1[1] = nums[0];
         //不偷最后一个房子
-        for (int i = 2; i < N - 1;i++){
+        for (int i = 2; i < N ;i++){
             dp1[i] = max((dp1[i - 2] + nums[i-1]),dp1[i -1]);
         }
         //不偷第一个房子
         int dp2[N];
         dp2[0] = 0;
         dp2[1] = nums[1];
-        for (int i = 0; i < N;i++){
+        for (int i = 2; i < N;i++){
             dp2[i] = max((dp2[i -2] + nums[i]),dp2[i-1]);
         }
-        return max(dp1[N - 2],dp2[N-1]);
+        return max(dp1[N - 1],dp2[N-1]);
     }
 };
 // @lc code=end

@@ -43,8 +43,10 @@ public:
 
     /** Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter. */
     bool search(string word) {
-        Node *temp = search(root,word,0);
-        return temp != nullptr;
+        Node *x = search(root,word,0);
+        if(x == nullptr)
+            return false;
+        return x->val;
     }
     Node* search(Node* x,string word,int d){
         if(x == nullptr)
@@ -52,17 +54,22 @@ public:
         char c = word[d];
         if(c == '.'){
             //在三个分支当中进行搜索
-            Node *temp1 = search(x->left, word, d + 1);
-            if(temp1!=nullptr)
+
+            if(d == word.length()-1)
+                return x;
+                
+            Node *temp1 = search(x->mid, word, d+1);
+            if(temp1!=nullptr&&temp1->val == true)
                 return temp1;
             else{
-                temp1 = search(x->mid, word, d + 1);
-                if(temp1 != nullptr){
+                temp1 = search(x->left, word, d);
+                if(temp1 != nullptr&&temp1->val == true){
                     return temp1;
                 }else{
-                    return search(x->right,word,d+1);
+                    return  search(x->right,word,d);
                 }
             }
+
         }else{
             if(c < x->c){
                 return search(x->left, word, d);
