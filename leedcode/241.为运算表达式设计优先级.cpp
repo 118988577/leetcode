@@ -43,43 +43,55 @@
 using namespace std;
 class Solution {
 public:
-    //1.采用递归+分治算法
-    long long strToInt(string s){
-        long long ans = 0;
+    vector<int> diffWaysToCompute(string instr) {
+        if (instr.length() == 0) {
+            return  {};
+        }
+        vector<int> result ;
+        int num = 0;
+        //考虑是全数字的情况
         int index = 0;
-        for (; index < s.length();index++){
-            ans *= 10;
-            ans += s[index] - '0';
+        while (index < instr.length() && !isOperation(instr[index])) {
+            num = num * 10 + instr[index] - '0';
+            index++;
         }
-        return ans;
-    }
-    vector<string> split(string input){
-        int N = input.length();
-        vector<string> res;
-        for (int i = 0; i < N;i++){
-            if(input[i] >= '0'&&input[i] <= '9'){
-                string num = "";
-                num += input[i++];
-                while(input[i] >= '0'&&input[i] <= '9'){
-                    num += input[i++];
+        //将全数字的情况直接返回
+        if (index == instr.length()) {
+            result.push_back(num);
+            return result;
+        }
+        int N = instr.length();
+        for (int i = 0; i < instr.length(); i++) {
+            //通过运算符将字符串分成两部分
+            if (isOperation(instr[i])) {
+                vector<int> result1 = diffWaysToCompute(instr.substr(0, i));
+                vector<int> result2 = diffWaysToCompute(instr.substr(i + 1,N - i-1));
+                //将两个结果依次运算
+                for (int j = 0; j < result1.size(); j++) {
+                    for (int k = 0; k < result2.size(); k++) {
+                        char op = instr[i];
+                        result.push_back(caculate(result1[j], op, result2[k]));
+                    }
                 }
-                res.push_back(num);
-                i--;
-            }
-            if(input[i] == '+'||input[i] == '-'||input[i] == '*'||input[i] == '/'){
-                string temp = "";
-                temp += input[i];
-                res.push_back(temp);
             }
         }
-        return res;
+        return result;
     }
-    vector<int> diffWaysToCompute(string input) {
-        //先对输入做处理，转换成字符串数组
-        if(input.empty())
-            return {};
-        split(input);
-        
+
+    int caculate(int num1, char c, int num2) {
+        switch (c) {
+            case '+':
+                return num1 + num2;
+            case '-':
+                return num1 - num2;
+            case '*':
+                return num1 * num2;
+        }
+        return -1;
+    }
+
+    bool isOperation(char c) {
+        return c == '+' || c == '-' || c == '*';
     }
 };
 // @lc code=end
